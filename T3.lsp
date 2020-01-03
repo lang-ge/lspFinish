@@ -26,6 +26,7 @@
 )
 
 
+;;;功能：读取文件并转换为表
 ;;;测试：(ZL-TXTFILE-READTOLIST "D:\\TEST.TXT")
 (defun ZL-TXTFILE-READTOLIST (TXTFILE / LST_JG F TMP)
   (setq LST_JG '())
@@ -39,4 +40,56 @@
   )
   ;;返回
   (reverse LST_JG)
+)
+
+;;;==================================================*
+;;;Vscode文件路径转换
+(defun c:T4 (/)
+  (vl-load-com)
+  (SET-CLIP-STRING
+    (vs-f-path (vl-filename-directory (GET-CLIP-STRING)))
+  )
+  (princ "格式转换完成!")
+)
+
+
+;;返回值:转换后的字符串 或者  None
+(Defun vs-f-path (string /)
+  (while (vl-string-search "\\" string)
+    (setq string (vl-string-subst "/" "\\" string))
+  )
+  string
+)
+
+;;;=================================================================*
+;;;功能：向系统剪贴板写入文字                                       *
+(defun SET-CLIP-STRING (STR / HTML RESULT)
+  (and
+    (= (type STR) 'STR)
+    (setq HTML (vlax-create-object "htmlfile"))
+    (setq
+      RESULT (vlax-invoke
+	       (vlax-get (vlax-get HTML 'PARENTWINDOW) 'CLIPBOARDDATA)
+	       'SETDATA
+	       "Text"
+	       STR
+	     )
+    )
+    (vlax-release-object HTML)
+  )
+)
+;;;功能：读取系统剪贴板中字符串
+(defun GET-CLIP-STRING (/ HTML RESULT)
+  (and (setq HTML (vlax-create-object "htmlfile"))
+       (setq RESULT (vlax-invoke
+		      (vlax-get	(vlax-get HTML 'PARENTWINDOW)
+				'CLIPBOARDDATA
+		      )
+		      'GETDATA
+		      "Text"
+		    )
+       )
+       (vlax-release-object HTML)
+  )
+  RESULT
 )
