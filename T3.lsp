@@ -8,15 +8,15 @@
       (setq em (strcat "\"" (vs-f-path (vl-filename-directory (GET-CLIP-STRING))) "\""))
       (SET-CLIP-STRING em)
       (if (= em "\"\"")
-      (alert " ^o^----^0^----^o^")
+      (alert " 哦豁^.^走丢了^o^~~^o^")
       (alert em))	
     )
     (progn
       (setq d1 (ZL-TXTFILE-READTOLIST (findfile "hymcad.mnl")))
       (setq d2 (cadr (member (strcat "(defun c:" na "()") d1)))
       (if (/= d2 nil)
-	(setq nu (- (vl-string-search "lsp" d2) (vl-string-search "\"" d2))
-	      en (substr d2 (+ (vl-string-search "\"" d2) 2) (+ nu 2))
+	(setq nu (- (vl-string-search "p\"" d2) (vl-string-search "\"" d2)
+	      en (substr d2 (+ (vl-string-search "\"" d2) 2) nu)
 	)
 	(setq en (strcat na ".lsp"))
       )
@@ -29,6 +29,7 @@
   )
   (princ)
 )
+
 
 ;;;功能：读取文件并转换为表
 ;;;测试：(ZL-TXTFILE-READTOLIST "D:\\TEST.TXT")
