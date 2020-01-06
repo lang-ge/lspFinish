@@ -17,7 +17,7 @@
 
 ;;;==================================================*
 ;;;[功能] 字符串倒序
-;;;测试：(reve (getstring "输入数字 "))
+;;;测试：(reve (getstring "输入整数"))
 (defun reve (s / n a d1)
   (setq n (strlen s))
   (setq a "")
