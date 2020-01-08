@@ -1,7 +1,7 @@
 ;;;输入命令发送相关文件至VsCode
-(defun c:T3 (/ na d1 d2 nu en em)
-  (alert "☆☆☆即将打开前端最流行的VsCode编辑器☆☆☆ ")
-  (setq	na (getstring "输入文件名或命令继续~~~~!\n默认可进行Git文件路径格式转换!"))
+(defun c:T3 (/ na d1 d2 nu en em ez x)
+  (alert "☆☆☆即将开始VsCode编辑器工作之旅☆☆☆~^o^ ")
+  (setq	na (getstring "输入目标文件名或命令继续~~~!\n默认可进行Git文件路径格式转换!"))
   (if (= na "")
     (progn
       (alert "源文件路径选择了吗?确认继续~~~")
@@ -15,15 +15,22 @@
       (setq d1 (ZL-TXTFILE-READTOLIST (findfile "hymcad.mnl")))
       (setq d2 (cadr (member (strcat "(defun c:" na "()") d1)))
       (if (/= d2 nil)
-	(setq nu (- (vl-string-search "p\"" d2) (vl-string-search "\"" d2)
+	(setq nu (- (vl-string-search "p\"" d2) (vl-string-search "\"" d2))
 	      en (substr d2 (+ (vl-string-search "\"" d2) 2) nu)
 	)
 	(setq en (strcat na ".lsp"))
       )
-
+      (if (findfile en)
+	(setq ez (findfile en))
+	(foreach x (dos_lisplist T);;;返回已加载的LISP文件和路径列表
+	  (if (wcmatch x (strcat "*" en))
+	    (setq ez x)
+	  )
+	)
+      )
       (startapp
 	"E:\\ZydZax\\Downloads\\软件备份\\Microsoft VS Code\\Code.exe"
-	(strcat "\"" (findfile en))
+	(strcat "\"" ez)
       )
     )
   )
