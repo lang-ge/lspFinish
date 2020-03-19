@@ -13,7 +13,7 @@ Else
 		Clistr (FileName)
 	Next   
 End If
-'CAD-VL¿Ø¼ş
+'CAD-VLæ§åˆ¶
 Dim ws,App,VLApp
 Set ws = CreateObject("wscript.shell")
 Set App = GetObject(, "AutoCAD.Application")
@@ -25,7 +25,7 @@ REM Else
 REM 	ws.Run """D:\Program Files\AutoCAD 2008\acad.exe""", 3:WScript.Sleep 3000:ws.SendKeys " ":WScript.Sleep 50:ws.SendKeys "^v~" '"3z "
 REM End If
 
-'´íÎóÌáÊ¾
+'é”™è¯¯æç¤º
 Sub Die(msg)
 	WScript.Echo "AutoLISP: " & msg
 	WScript.Quit(1)
