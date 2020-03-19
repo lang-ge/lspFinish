@@ -13,8 +13,8 @@ End If
 '主程序
 Dim ws
 Set ws = CreateObject("Wscript.Shell")
-ws.run "%systemroot%\explorer.exe /select, "+arg, 2
-WScript.Sleep 500:ws.SendKeys "~" 
+ws.run "%systemroot%\explorer.exe / open, "+arg, 2
+'WScript.Sleep 500:ws.SendKeys "~" 
 
 '错误提示
 Sub Die(msg)
