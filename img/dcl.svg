@@ -1,0 +1,15 @@
+<svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg" class="icon">
+ <defs>
+  <style type="text/css"/>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="2329.272727" width="2329.272727" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <rect id="svg_6" height="0" width="1.77778" y="621.39784" x="778.16796" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" fill="#d4237a"/>
+  <polygon stroke="null" stroke-width="null" points="105.48768772217409,181.82229614257812 121.10554503899766,232.1485595703125 168.66307067871094,233.23416137695312 130.75774010698115,265.42315673828125 144.532131518572,316.42034912109375 105.48768772217409,285.98785400390625 66.44295343209433,316.42034912109375 80.21743234178211,265.42315673828125 42.31231001552305,233.23416137695312 89.86974640717744,232.1485595703125 105.48768772217409,181.82229614257812 121.10554503899766,232.1485595703125 " fill="#ff0000" id="svg_8"/>
+  <text font-weight="normal" transform="matrix(22.853198707661033,0,0,29.858613178255485,-12443.608277068766,-23384.8398970634) " xml:space="preserve" text-anchor="middle" font-family="Fantasy" font-size="24" id="svg_12" y="810.04392" x="565.10641" stroke-linecap="null" stroke-linejoin="null" stroke-width="0" fill="#0000ff" font-style="italic">DCL</text>
+ </g>
+</svg>
