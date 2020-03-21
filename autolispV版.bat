@@ -22,6 +22,8 @@ Else
 	ws.Run """D:\Program Files\AutoCAD 2008\acad.exe""", 3:WScript.Sleep 3000:ws.SendKeys " ":WScript.Sleep 50:ws.SendKeys "^v~" '"3z "
 End If
 
+Set arg = Nothing : Set i = Nothing : Set FileName = Nothing : Set ws = Nothing : Set App = Nothing
+
 '设置剪切板的内容
 Function Clistr (FileName)
 	Dim Form, TextBox
@@ -32,6 +34,7 @@ Function Clistr (FileName)
 	TextBox.SelStart = 0
 	TextBox.SelLength = TextBox.TextLength
 	TextBox.Copy
+	Set Form = Nothing : Set TextBox = Nothing
 End Function
 
 '错误提示

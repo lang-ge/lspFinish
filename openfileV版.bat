@@ -16,6 +16,8 @@ Set ws = CreateObject("Wscript.Shell")
 ws.run "%systemroot%\explorer.exe / open, "+arg, 2
 'WScript.Sleep 500:ws.SendKeys "~" 
 
+Set arg = Nothing : Set i = Nothing : Set ws = Nothing
+
 '¥ÌŒÛÃ· æ
 Sub Die(msg)
 	WScript.Echo "AutoLISP: " & msg
