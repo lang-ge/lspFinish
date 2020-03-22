@@ -109,6 +109,55 @@
   (entmod ell_2);更新第二条直线
 )
 
+;;;==================================================*
+;;;利用ActiveX对象实现例14－4的功能
+(vl-load-com)
+(defun c:c1l2(/ p0 p1 p2 p3 p4 r ec el1 el2 v_c v_l1 v_l2 l1-l2 vrl)
+    (setq p0(getpoint "\n输入圆心:"))
+    (setq r(getdist p0 "\n输入半径:"))
+    (command "circle" p0 r)
+    (setq r(* 1.25 r))
+    (setq ec(entlast))
+    (setq v_c(list (vlax-ename->vla-object ec)));圆的图元名转换为VLA对象
+    (setq p1(polar p0 0 r))
+  (setq p2(polar p0 (* 0.5 pi) r))
+    (setq p3(polar p0 pi r))
+    (setq p4(polar p0 (* -0.5 pi) r))
+    (command "line" p1 p3 "")
+    (setq el1(entlast));第一条直线的图元名
+    (setq v_l1(vlax-ename->vla-object el1));第一条直线转换为VLA对象
+    (command "line" p2 p4 "")
+    (setq el2(entlast));第二条直线的图元名
+    (setq v_l2(vlax-ename->vla-object el2));第二条直线转换为VLA对象
+  (setq l1-l2(list v_l1 v_l2));两条直线的VLA对象表
+  (setq vrl (vlr-pers(vlr-object-reactor v_c  l1-l2 '((:vlr-modified . c-2l)))));反应器链接到圆上，两条直线的VLA对象表为关联数据，当发生修改该圆的事件时，调用c-2l函数
+    (princ)
+)
+;定义c-2l函数
+(defun c-2l(notifier-object reactor-object parameter-list / p0 p1 p2 p3 p4 p0x p0y p0z l v_l1 v_l2)
+  (setq p0(VLA-get-center notifier-object));获取圆的圆心，P0是变体
+  (setq p0(vlax-variant-value p0));将变体转换为安全数组
+  (setq p0(vlax-safearray->list p0));将安全数组转换为表
+  (setq c_r(* 1.25 (VLA-get-radius notifier-object)));获取圆的半径之后×1.5
+(setq v_l1(car (vlr-data reactor-object)));第一条直线的VLA对象
+  (setq v_l2(cadr (vlr-data reactor-object)));第二条直线的VLA对象
+  (setq p0x (car p0));获取圆心的X坐标
+  (setq p0y (cadr p0));获取圆心的Y坐标
+  (setq p0z (caddr p0));获取圆心的Z坐标
+  ;计算直线端点的新位置再转换为ActiveX的三维点
+  (setq p1 (vlax-3d-point (list (+ p0x c_r) p0y p0z)));
+  (setq p2 (vlax-3d-point(list p0x (+ p0y c_r) p0z)))
+  (setq p3 (vlax-3d-point(list (- p0x c_r) p0y p0z)))
+  (setq p4 (vlax-3d-point(list p0x (- p0y c_r) p0z)))
+(vla-put-startpoint v_l1 p1);更新直线1的起点
+  (vla-put-endpoint v_l1 p3);更新直线1的终点
+  (vla-put-startpoint v_l2 p2);更新直线2的起点
+  (vla-put-endpoint v_l2 p4);更新直线2的终点
+)
+;;; 本程序中，与反应器相关联的数据是两条直线的VLA对象。
+;;;直接从圆的VLA对象中获取圆的圆心和半径属性。直接修改直线的起点和终点属性。
+;;;因此具有程序代码简短、运行速度快的特点。
+
 
 
 
