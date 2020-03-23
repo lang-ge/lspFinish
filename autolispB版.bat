@@ -8,22 +8,23 @@ Else
 	Dim arg, i, FileName
 	For i = 0 To WScript.Arguments.Count - 1
 		arg = WScript.Arguments(i)
-		'FileName = "{(}load """ & Replace(arg, "\", "/") & """{)}~" 
-		FileName = "(load """ & Replace(arg, "\", "/") & """)"
-		Clistr (FileName)
+		FileName = Replace(arg, "\", "/") 
+		' FileName = "(load """ & Replace(arg, "\", "/") & """)"
 	Next   
 End If
-'CAD-VL控制
+'ActiveX控制
 Dim ws,App,VLApp
 Set ws = CreateObject("wscript.shell")
 Set App = GetObject(, "AutoCAD.Application")
 Set VLApp = App.GetInterfaceObject("VL.Application.16")
-VLApp.ActiveDocument.Functions.Item("princ").funcall(cstr(FileName))
-REM If App Then
-REM 	ws.appactivate "AutoCAD 2008":ws.SendKeys "% R":WScript.Sleep 50:ws.SendKeys "^v~" '"3z "
-REM Else
-REM 	ws.Run """D:\Program Files\AutoCAD 2008\acad.exe""", 3:WScript.Sleep 3000:ws.SendKeys " ":WScript.Sleep 50:ws.SendKeys "^v~" '"3z "
-REM End If
+VLApp.ActiveDocument.Functions.Item("Sendcommand").funcall(cstr(FileName))
+If App Then
+	ws.appactivate "AutoCAD 2008":ws.SendKeys "% R":WScript.Sleep 50:ws.SendKeys "~" '"3z "
+Else
+	ws.Run """D:\Program Files\AutoCAD 2008\acad.exe""", 3:WScript.Sleep 3000:ws.SendKeys " ":WScript.Sleep 50:ws.SendKeys "~" '"3z "
+End If
+
+Set arg = Nothing : Set i = Nothing : Set FileName = Nothing : Set ws = Nothing : Set App = Nothing : Set VLApp = Nothing
 
 '错误提示
 Sub Die(msg)
