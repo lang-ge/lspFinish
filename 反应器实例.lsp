@@ -1,3 +1,14 @@
+;;; 打印出所有相关反应器事件的列表（按反应器类型排序）
+(defun print-reactors-and-events () 
+  (foreach rtype (vlr-types) 
+    (princ (strcat "\n" (vl-princ-to-string rtype)))
+    (foreach rname (vlr-reaction-names rtype) 
+      (princ (strcat "\n\t" (vl-princ-to-string rname)))
+    )
+  )
+  (princ)
+)
+;;;==================================================*
 ;;;生成一个圆的VLA对象。
 (vl-load-com)
 (setq myCircle (progn 
@@ -13,7 +24,7 @@
                  )
                )
 )
-
+vla-PutRemoteFile
 ;;;该函数用来打印圆的半径
 (defun print-radius (notifier-object reactor-object parameter-list) 
   (vl-load-com)
@@ -27,7 +38,7 @@
 )
 
 :vlr-docframemovedorresized
-;;;mycircle对象反应器
+;;;mycircle对象反应器(vlr-beep-reaction-->嘟嘟声)
 (setq circleReactor (vlr-object-reactor 
                       (list myCircle)
                       "Circle Reactor"
@@ -109,7 +120,7 @@
   (entmod ell_2) ;更新第二条直线
 )
 
-;;;==================================================*
+;;;==================================================*其它实例
 ;;;利用ActiveX对象实现例14－4的功能
 (vl-load-com)
 (defun c:c1l2 (/ p0 p1 p2 p3 p4 r ec el1 el2 v_c v_l1 v_l2 l1-l2 vrl) 
@@ -161,6 +172,15 @@
 ;;; 本程序中，与反应器相关联的数据是两条直线的VLA对象。
 ;;;直接从圆的VLA对象中获取圆的圆心和半径属性。直接修改直线的起点和终点属性。
 ;;;因此具有程序代码简短、运行速度快的特点。
+
+;;;==================================================*
+;;;定义名字为saveDrawingInfo的回调函数。
+(defun saveDrawingInfo(calling-reactor commandInfo / dwgname filesize)
+  (vl-load-com)
+   (setq dwgname (cadr commandInfo) filesize (vl-file-size dwgname))
+   (alert(strcat "这个文件（" dwgname "）的大小是" (itoa filesize) "字节."))
+   (princ)
+)
 
 
 
