@@ -74,4 +74,4 @@
   (setq v_l1 (car (vlr-data reactor-object))) ;第一条直线的VLA对象
   (vla-put-endpoint v_l1 (vlax-3d-point p3)) ;更新直线1的终点
 )
-;;; 本程序中，与反应器相关联的数据是两条直线的VLA对象。
+;;; 本程序中，与反应器相关联的数据是直线的VLA对象。

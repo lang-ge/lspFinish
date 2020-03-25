@@ -1,3 +1,4 @@
+;;; 用ActiveX方法生成直线
 (defun c:367 (/ myacad mydoc myms p1 p2 myline) 
   (vl-load-com)
   (setq myacad (vlax-get-acad-object)) ;获取AutoCAD应用程序本身
@@ -9,7 +10,7 @@
   (setq myline (vla-addline myms (vlax-3d-point p1) (vlax-3d-point p2)))
   (princ)
 )
-
+;;;==================================================*
 ;;;用ActiveX方法定义将选到的圆改变为指定面积的命令。
 (defun c:236 (/ ec area v_c) 
   (vl-load-com)
@@ -25,7 +26,8 @@
       mspace (vla-get-modelspace (Vla-get-activedocument myacad))
 					;获取模型空间
 )
-;;;心给定的坐标值建立引线
+;;;==================================================*
+;;;以给定的坐标值建立引线
 (setq corner (vlax-make-safearray vlax-vbdouble '(0 . 2)))
 (vlax-safearray-fill corner '(0 10 0))
 (setq width 10)
@@ -40,10 +42,17 @@
 (vla-zoomextents myacad)
 (princ)
 )
-;;; vla点转换成lisp点
+;;;==================================================*
+;;; VLA点转换成lisp点
   (setq p0 (vlax-variant-value p0)) ;将变体转换为安全数组
-  (setq p0 (vlax-safearray->list p0)) ;将安全数组转换为表
+  (setq p0 (vlax-safearray->list p0)) ;将安全数组转换为点表
+;;;==================================================*
   (vlr-added-p vrl);判断反应器是否活动
+;;;==================================================* 
+;;; 发送字符串至命令行(精简版)
+(vla-sendcommand(vlax-get-property (vlax-get-acad-object) 'activedocument)
+(strcat "(load " "\"" FileName "\"" ")"))
+;;;==================================================* 
 ;;; 关于vla-AddLeader的例子1
 (setq myms (vla-get-modelspace 
              (vla-get-ActiveDocument (vlax-get-acad-object))
@@ -65,6 +74,7 @@
 ;;; (vlax-put LDOBJ 'Coordinates CI)
 ;;添加第三点
 ;;; (vlax-put LDOBJ 'Coordinates (append CI (getpoint P2 "\n点3:")))
+;;;==================================================*
 ;;; 关于vla-AddLeader的例子2
 (setvar 'osmode 0)
 (setq pt1   (getpoint "\nFirst point: ")
@@ -78,3 +88,43 @@
 (setq ldrobj (vla-addleader space ptlist txtobj acLineWithArrow))
 ;;; (vla-addpolyline space ptlist)
 ;;; (vla-delete txtobj)
+;;;==================================================*
+;;; 官方关于vla-AddLeader的例子3
+(vl-load-com)
+(defun c:257 () 
+  (setq acadObj (vlax-get-acad-object))
+  (setq doc (vla-get-ActiveDocument acadObj))
+
+  (setq points (vlax-make-safearray vlax-vbDouble '(0 . 5)))
+  (vlax-safearray-fill points '(1 1 0 4 4 0))
+  (setq i 0)
+
+  (setq modelSpace (vla-get-ModelSpace doc))
+  (setq oML (vla-AddMLeader modelSpace points i))
+
+  (setq r (vla-AddLeader oML))
+
+  (vlax-safearray-put-element points 4 10)
+  (vla-AddLeaderLine oML r points)
+
+  (alert (strcat "LeaderCount = " (itoa (vla-get-LeaderCount oML))))
+  (vla-ZoomExtents acadObj)
+)
+;;;==================================================*
+;;; 个人精简关于vla-AddLeader的例子3
+(vl-load-com)
+(defun c:257 () 
+  (setq pt1 (getpoint "\nFirst point: ")
+        pt2 (getpoint pt1 "\nNext point: ")
+  )
+  (setq acadObj (vlax-get-acad-object))
+  (setq doc (vla-get-ActiveDocument acadObj))
+
+  ;; 定义引导点
+  (setq points (vlax-make-safearray vlax-vbDouble '(0 . 5)))
+  (vlax-safearray-fill points (append pt1 pt2))
+ 
+  ;; 将mleader对象添加到模型空间
+  (setq modelSpace (vla-get-ModelSpace doc))
+  (setq mLeader (vla-AddMLeader modelSpace points 0))
+)
