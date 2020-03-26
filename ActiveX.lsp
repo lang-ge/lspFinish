@@ -3,7 +3,7 @@
   (vl-load-com)
   (setq myacad (vlax-get-acad-object)) ;获取AutoCAD应用程序本身
   (setq mydoc (vla-get-ActiveDocument myacad)) ;获取活动文档
-  (setq myms (vla-get-ModelSpace mydoc)) ;获取模型空间
+  (setq mspace (vla-get-ModelSpace mydoc)) ;获取模型空间
   (setq p1 (getpoint "\n输入直线的起点:"))
   (setq p2 (getpoint p1 "\n输入直线的终点:"))
   ;将普通的三维点转换为ActiveX的变体，再调用填加直线的方法
@@ -49,7 +49,7 @@
 ;;;==================================================*
   (vlr-added-p vrl);判断反应器是否活动
 ;;;==================================================* 
-;;; 发送字符串至命令行(精简版)
+;;;vla-sendcommand(精简版)
 (vla-sendcommand(vlax-get-property (vlax-get-acad-object) 'activedocument)
 (strcat "(load " "\"" FileName "\"" ")"))
 ;;;==================================================* 
@@ -127,4 +127,31 @@
   ;; 将mleader对象添加到模型空间
   (setq modelSpace (vla-get-ModelSpace doc))
   (setq mLeader (vla-AddMLeader modelSpace points 0))
+)
+;;;==================================================*
+;;; 旋转标注
+(vl-load-com)
+(defun c:232 () 
+  (setq pt1 (getpoint "\nFirst point: ")
+        pt2 (getpoint pt1 "\nNext point: ")
+        pt3 (getpoint "\n文字位置: ")
+  )
+
+  ;; 本示例在模型空间中创建旋转尺寸.
+  (setq acadObj (vlax-get-acad-object))
+  (setq doc (vla-get-ActiveDocument acadObj))
+
+  ;;定义尺寸
+  (setq rotAngle (/ (* 180 3.141592) 180))
+
+  ;; 在模型空间中创建旋转尺寸
+  (setq modelSpace (vla-get-ModelSpace doc))
+  (setq dimObj (vla-AddDimRotated modelSpace 
+                                  (vlax-3d-point pt1)
+                                  (vlax-3d-point pt2)
+                                  (vlax-3d-point pt3)
+                                  rotAngle
+               )
+  )
+;;;  (vla-ZoomAll acadObj)
 )

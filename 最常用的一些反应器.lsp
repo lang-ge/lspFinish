@@ -1,0 +1,290 @@
+;;; 最常用的一些反应器
+((:VLR-AcDb-Reactor 
+   (:VLR-objectAppended :VLR-objectUnAppended 
+                        :VLR-objectReAppended
+                        :VLR-objectOpenedForModify
+                        :VLR-objectModified
+                        :VLR-objectErased
+                        :VLR-objectUnErased
+   )
+ ) 
+  (:VLR-Command-Reactor 
+    (:VLR-unknownCommand :VLR-commandWillStart 
+                         :VLR-commandEnded
+                         :VLR-commandCancelled
+                         :VLR-commandFailed
+    )
+  )
+  (:VLR-DeepClone-Reactor 
+    (:VLR-beginDeepClone :VLR-beginDeepCloneXlation 
+                         :VLR-abortDeepClone
+                         :VLR-endDeepClone
+    )
+  )
+  (:VLR-DocManager-Reactor 
+    (:VLR-documentCreated :VLR-documentToBeDestroyed 
+                          :VLR-documentLockModeWillChange
+                          :VLR-documentLockModeChangeVetoed
+                          :VLR-documentLockModeChanged
+                          :VLR-documentBecameCurrent
+                          :VLR-documentToBeActivated
+                          :VLR-documentToBeDeactivated
+    )
+  )
+  (:VLR-DWG-Reactor 
+    (:VLR-beginDwgOpen :VLR-endDwgOpen 
+                       :VLR-dwgFileOpened
+                       :VLR-databaseConstructed
+                       :VLR-databaseToBeDestroyed
+                       :VLR-beginSave
+                       :VLR-saveComplete
+                       :VLR-beginClose
+    )
+  )
+  (:VLR-DXF-Reactor 
+    (:VLR-beginDxfIn :VLR-abortDxfIn 
+                     :VLR-dxfInComplete
+                     :VLR-beginDxfOut
+                     :VLR-abortDxfOut
+                     :VLR-dxfOutComplete
+    )
+  )
+  (:VLR-Editor-Reactor 
+    (:VLR-unknownCommand :VLR-commandWillStart 
+                         :VLR-commandEnded
+                         :VLR-commandCancelled
+                         :VLR-commandFailed
+                         :VLR-lispWillStart
+                         :VLR-lispEnded
+                         :VLR-lispCancelled
+                         :VLR-beginClose
+                         :VLR-beginDxfIn
+                         :VLR-abortDxfIn
+                         :VLR-dxfInComplete
+                         :VLR-beginDxfOut
+                         :VLR-abortDxfOut
+                         :VLR-dxfOutComplete
+                         :VLR-beginDwgOpen
+                         :VLR-endDwgOpen
+                         :VLR-dwgFileOpened
+                         :VLR-databaseConstructed
+                         :VLR-databaseToBeDestroyed
+                         :VLR-beginSave
+                         :VLR-saveComplete
+                         :VLR-sysVarWillChange
+                         :VLR-sysVarChanged
+    )
+  )
+  (:VLR-Insert-Reactor 
+    (:VLR-beginInsert :VLR-beginInsertM 
+                      :VLR-otherInsert
+                      :VLR-abortInsert
+                      :VLR-endInsert
+    )
+  )
+  (:VLR-Linker-Reactor (:VLR-rxAppLoaded :VLR-rxAppUnLoaded))
+  (:VLR-Lisp-Reactor (:VLR-lispWillStart :VLR-lispEnded :VLR-lispCancelled))
+  (:VLR-Miscellaneous-Reactor (:VLR-pickfirstModified :VLR-layoutSwitched))
+  (:VLR-Mouse-Reactor (:VLR-beginDoubleClick :VLR-beginRightClick))
+  (:VLR-Object-Reactor 
+    (:VLR-cancelled :VLR-copied 
+                    :VLR-erased
+                    :VLR-unerased
+                    :VLR-goodbye
+                    :VLR-openedForModify
+                    :VLR-modified
+                    :VLR-subObjModified
+                    :VLR-modifyUndone
+                    :VLR-modifiedXData
+                    :VLR-unappended
+                    :VLR-reappended
+                    :VLR-objectClosed
+    )
+  )
+  (:VLR-SysVar-Reactor (:VLR-sysVarWillChange :VLR-sysVarChanged))
+  (:VLR-Toolbar-Reactor (:VLR-toolbarBitmapSizeWillChange :VLR-toolbarBitmapSizeChanged ) )
+  (:VLR-Undo-Reactor 
+    (:VLR-undoSubcommandAuto :VLR-undoSubcommandControl 
+                             :VLR-undoSubcommandBegin
+                             :VLR-undoSubcommandEnd
+                             :VLR-undoSubcommandMark
+                             :VLR-undoSubcommandBack
+                             :VLR-undoSubcommandNumber
+    )
+  )
+  (:VLR-Wblock-Reactor 
+    (:VLR-wblockNotice :VLR-beginWblockPt 
+                       :VLR-beginWblockId
+                       :VLR-beginWblock
+                       :VLR-otherWblock
+                       :VLR-abortWblock
+                       :VLR-endWblock
+                       :VLR-beginWblockObjects
+    )
+  )
+  (:VLR-Window-Reactor (:VLR-docFrameMovedOrResized :VLR-mainFrameMovedOrResized) )
+  (:VLR-XREF-Reactor 
+    (:VLR-beginAttach :VLR-otherAttach 
+                      :VLR-abortAttach
+                      :VLR-endAttach
+                      :VLR-redirected
+                      :VLR-comandeered
+                      :VLR-beginRestore
+                      :VLR-abortRestore
+                      :VLR-endRestore
+                      :VLR-xrefSubcommandBindItem
+                      :VLR-xrefSubcommandAttachItem
+                      :VLR-xrefSubcommandOverlayItem
+                      :VLR-xrefSubcommandDetachItem
+                      :VLR-xrefSubcommandPathItem
+                      :VLR-xrefSubcommandReloadItem
+                      :VLR-xrefSubcommandUnloadItem
+    )
+  )
+)
+
+:VLR-Linker-Reactor
+ :VLR-rxAppLoaded
+ :VLR-rxAppUnLoaded
+:VLR-Editor-Reactor
+ :VLR-unknownCommand
+ :VLR-commandWillStart
+ :VLR-commandEnded
+ :VLR-commandCancelled
+ :VLR-commandFailed
+ :VLR-lispWillStart
+ :VLR-lispEnded
+ :VLR-lispCancelled
+ :VLR-beginClose
+ :VLR-beginDxfIn
+ :VLR-abortDxfIn
+ :VLR-dxfInComplete
+ :VLR-beginDxfOut
+ :VLR-abortDxfOut
+ :VLR-dxfOutComplete
+ :VLR-beginDwgOpen
+ :VLR-endDwgOpen
+ :VLR-dwgFileOpened
+ :VLR-databaseConstructed
+ :VLR-databaseToBeDestroyed
+ :VLR-beginSave
+ :VLR-saveComplete
+ :VLR-sysVarWillChange
+ :VLR-sysVarChanged
+:VLR-AcDb-Reactor
+ :VLR-objectAppended
+ :VLR-objectUnAppended
+ :VLR-objectReAppended
+ :VLR-objectOpenedForModify
+ :VLR-objectModified
+ :VLR-objectErased
+ :VLR-objectUnErased
+:VLR-DocManager-Reactor
+ :VLR-documentCreated
+ :VLR-documentToBeDestroyed
+ :VLR-documentLockModeWillChange
+ :VLR-documentLockModeChangeVetoed
+ :VLR-documentLockModeChanged
+ :VLR-documentBecameCurrent
+ :VLR-documentToBeActivated
+ :VLR-documentToBeDeactivated
+:VLR-Command-Reactor
+ :VLR-unknownCommand
+ :VLR-commandWillStart
+ :VLR-commandEnded
+ :VLR-commandCancelled
+ :VLR-commandFailed
+:VLR-Lisp-Reactor
+ :VLR-lispWillStart
+ :VLR-lispEnded
+ :VLR-lispCancelled
+:VLR-DXF-Reactor
+ :VLR-beginDxfIn
+ :VLR-abortDxfIn
+ :VLR-dxfInComplete
+ :VLR-beginDxfOut
+ :VLR-abortDxfOut
+ :VLR-dxfOutComplete
+:VLR-DWG-Reactor
+ :VLR-beginDwgOpen
+ :VLR-endDwgOpen
+ :VLR-dwgFileOpened
+ :VLR-databaseConstructed
+ :VLR-databaseToBeDestroyed
+ :VLR-beginSave
+ :VLR-saveComplete
+ :VLR-beginClose
+:VLR-Insert-Reactor
+ :VLR-beginInsert
+ :VLR-beginInsertM
+ :VLR-otherInsert
+ :VLR-abortInsert
+ :VLR-endInsert
+:VLR-Wblock-Reactor
+ :VLR-wblockNotice
+ :VLR-beginWblockPt
+ :VLR-beginWblockId
+ :VLR-beginWblock
+ :VLR-otherWblock
+ :VLR-abortWblock
+ :VLR-endWblock
+ :VLR-beginWblockObjects
+:VLR-SysVar-Reactor
+ :VLR-sysVarWillChange
+ :VLR-sysVarChanged
+:VLR-DeepClone-Reactor
+ :VLR-beginDeepClone
+ :VLR-beginDeepCloneXlation
+ :VLR-abortDeepClone
+ :VLR-endDeepClone
+:VLR-XREF-Reactor
+ :VLR-beginAttach
+ :VLR-otherAttach
+ :VLR-abortAttach
+ :VLR-endAttach
+ :VLR-redirected
+ :VLR-comandeered
+ :VLR-beginRestore
+ :VLR-abortRestore
+ :VLR-endRestore
+ :VLR-xrefSubcommandBindItem
+ :VLR-xrefSubcommandAttachItem
+ :VLR-xrefSubcommandOverlayItem
+ :VLR-xrefSubcommandDetachItem
+ :VLR-xrefSubcommandPathItem
+ :VLR-xrefSubcommandReloadItem
+ :VLR-xrefSubcommandUnloadItem
+:VLR-Undo-Reactor
+ :VLR-undoSubcommandAuto
+ :VLR-undoSubcommandControl
+ :VLR-undoSubcommandBegin
+ :VLR-undoSubcommandEnd
+ :VLR-undoSubcommandMark
+ :VLR-undoSubcommandBack
+ :VLR-undoSubcommandNumber
+:VLR-Window-Reactor
+ :VLR-docFrameMovedOrResized
+ :VLR-mainFrameMovedOrResized
+:VLR-Toolbar-Reactor
+ :VLR-toolbarBitmapSizeWillChange
+ :VLR-toolbarBitmapSizeChanged
+:VLR-Mouse-Reactor
+ :VLR-beginDoubleClick
+ :VLR-beginRightClick
+:VLR-Miscellaneous-Reactor
+ :VLR-pickfirstModified
+ :VLR-layoutSwitched
+:VLR-Object-Reactor
+ :VLR-cancelled
+ :VLR-copied
+ :VLR-erased
+ :VLR-unerased
+ :VLR-goodbye
+ :VLR-openedForModify
+ :VLR-modified
+ :VLR-subObjModified
+ :VLR-modifyUndone
+ :VLR-modifiedXData
+ :VLR-unappended
+ :VLR-reappended
+ :VLR-objectClosed
