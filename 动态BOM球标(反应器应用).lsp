@@ -28,12 +28,12 @@
   (princ)
 )
 ;定义c-2l回调函数
-(defun c-2l (notifier-object reactor-object parameter-list / r1 a1 p2 p3 v_l1 points 
-             myacad mydoc list1
+(defun c-2l (notifier-object reactor-object parameter-list / r1 a1 p1 p2 p3 v_l1 
+             points myacad mydoc
             ) 
   (setq p2 (VLA-get-center notifier-object)) ;获取圆的圆心，p2是变体
   (setq r1 (VLA-get-radius notifier-object)) ;获取圆的半径，r1是变体
-  (setq p2 (vlax-safearray->list (vlax-variant-value p2))) ;将安全数组转换为表
+  ;;;   (setq p2 (vlax-safearray->list (vlax-variant-value p2))) ;将安全数组转换为表
   (setq v_l1 (car (vlr-data reactor-object))) ;第一条直线的VLA对象
   ;;;   (setq P1 (vlax-safearray->list
   ;;;              (vlax-variant-value
@@ -41,13 +41,17 @@
   ;;;              )
   ;;;            )
   ;;;   ) ;将安全数组转换为表
-  (setq P1 (cdr (assoc 10 (entget (vlax-vla-object->ename v_l1)))))
-  (setq a1 (angle p2 p1)
-        p3 (polar p2 a1 r1)
-  )
-
+  ;;;   (setq P1 (cdr (assoc 10 (entget (vlax-vla-object->ename v_l1)))))
+  ;;;   (setq a1 (angle p2 p1)
+  ;;;         p3 (polar p2 a1 r1)
+  ;;;   )
+  (setq myacad (vlax-get-acad-object)) ;获取AutoCAD应用程序本身
+  (setq mydoc (vla-get-ActiveDocument myacad)) ;获取活动文档
+  (setq p1 (vla-get-Coordinate v_l1 0)) ;获取起点
+  (setq a1 (vla-AngleFromXAxis (vla-get-Utility mydoc) p2 p1)) ;获取角度
+  (setq P3 (vla-PolarPoint (vla-get-Utility mydoc) p2 a1 r1)) ;获取终点
   ;;;   点模式更新VLA对象
-  (vla-put-Coordinate v_l1 1 (vlax-3d-point P3)) ;更新指定点。简单直接
+  (vla-put-Coordinate v_l1 1 P3) ;更新指定点。简单直接
   ;;;   (setq points (append P1 P3))
   ;;;   (vlax-put v_l1 'Coordinates points)
 
@@ -57,9 +61,10 @@
   ;;;   (vlax-safearray-put-element points 4 (cadr p3))
   ;;;   (vlax-safearray-put-element points 5 (caddr p3))
   ;;;   (vla-put-Coordinates v_l1 points)
-  (setq myacad (vlax-get-acad-object)) ;获取AutoCAD应用程序本身
-  (setq mydoc (vla-get-ActiveDocument myacad)) ;获取活动文档
+
   (vla-Regen mydoc :vlax-true)
-  (SETQ p1 nil)
+  (setq p1 nil
+        a1 nil
+  )
   ;;;(vla-put-endpoint v_l1 (vlax-3d-point p3)) ;更新直线1的终点
 )
