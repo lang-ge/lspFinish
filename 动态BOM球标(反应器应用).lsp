@@ -35,15 +35,12 @@
   (setq r1 (VLA-get-radius notifier-object)) ;获取圆的半径，r1是变体
   (setq p2 (vlax-safearray->list (vlax-variant-value p2))) ;将安全数组转换为表
   (setq v_l1 (car (vlr-data reactor-object))) ;第一条直线的VLA对象
-  ;;; (setq list1 (vlax-safearray->list 
-  ;;;               (vlax-variant-value 
-  ;;;                 (vla-get-Coordinates 
-  ;;;                   v_l1
-  ;;;                 )
-  ;;;               )
-  ;;;             ) ;将安全数组转换为表
-  ;;; )
-  ;;; (setq P1 (list (car list1) (cadr list1) (caddr list1)))
+;;;   (setq P1 (vlax-safearray->list 
+;;;              (vlax-variant-value 
+;;;                (vlax-get-property v_l1 'Coordinate 0);0表示第一个端点
+;;;              )
+;;;            )
+;;;   ) ;将安全数组转换为表
   (setq P1 (cdr (assoc 10 (entget (vlax-vla-object->ename v_l1)))))
   (setq a1 (angle p2 p1)
         p3 (polar p2 a1 r1)
@@ -53,7 +50,7 @@
   (setq points (append P1 P3))
   (vlax-put v_l1 'Coordinates points)
 
-  ;;;   点坐标模式更新VLA对象
+  ;;;   点坐标模式更新VLA对象/(vlax-get-property v_l1 'Coordinate 0)/(vla-get-Coordinate v_l1 0)
   ;;;   (setq points (vlax-variant-value (vla-get-Coordinates v_l1)))
   ;;;   (vlax-safearray-put-element points 3 (car p3))
   ;;;   (vlax-safearray-put-element points 4 (cadr p3))
