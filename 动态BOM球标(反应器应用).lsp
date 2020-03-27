@@ -21,7 +21,7 @@
   (setq v_l1 (vlax-ename->vla-object (entlast))) ;第一条直线转换为VLA对象
   (command ".text" "m" p2 h1 0 t1)
   (command ".circle" p2 r1)
-  (setq v_c (list (vlax-ename->vla-object (entlast)))) ;圆的图元名转换为VLA对象
+  (setq v_b (list (vlax-ename->vla-object (entlast)))) ;圆的图元名转换为VLA对象
   (setq vrl (vlr-object-reactor v_c (list v_l1) '((:vlr-modified . c-2l))))
   ;;;反应器链接到圆上，直线的VLA对象表为关联数据，当发生修改该圆的事件时，调用c-2l函数
   (setvar "cmdecho" oce)
@@ -35,15 +35,16 @@
   (setq r1 (VLA-get-radius notifier-object)) ;获取圆的半径，r1是变体
   (setq p2 (vlax-safearray->list (vlax-variant-value p2))) ;将安全数组转换为表
   (setq v_l1 (car (vlr-data reactor-object))) ;第一条直线的VLA对象
-  (setq list1 (vlax-safearray->list 
-                (vlax-variant-value 
-                  (vla-get-Coordinates 
-                    v_l1
-                  )
-                )
-              ) ;将安全数组转换为表
-  )
-  (setq P1 (list (car list1) (cadr list1) (caddr list1)))
+  ;;; (setq list1 (vlax-safearray->list 
+  ;;;               (vlax-variant-value 
+  ;;;                 (vla-get-Coordinates 
+  ;;;                   v_l1
+  ;;;                 )
+  ;;;               )
+  ;;;             ) ;将安全数组转换为表
+  ;;; )
+  ;;; (setq P1 (list (car list1) (cadr list1) (caddr list1)))
+  (setq P1 (cdr (assoc 10 (entget (vlax-vla-object->ename v_l1)))))
   (setq a1 (angle p2 p1)
         p3 (polar p2 a1 r1)
   )
