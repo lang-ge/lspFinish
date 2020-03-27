@@ -47,6 +47,16 @@
   (setq p0 (vlax-variant-value p0)) ;将变体转换为安全数组
   (setq p0 (vlax-safearray->list p0)) ;将安全数组转换为点表
 ;;;==================================================*
+;;; 将VLA对象转换成lisp对象名
+  (setq P1 (cdr (assoc 10 (entget (vlax-vla-object->ename v_l1)))))
+;;;==================================================*
+;;; 获取VLA对象指定第一个端点(1为每二个)
+  (setq P1 (vlax-get-property v_l1 'Coordinate 0));格式1
+  (setq P1 (vla-get-Coordinate v_l1 0));格式2
+;;; 更新VLA对象指定第一个端点(1为每二个)
+ (vla-put-Coordinate v_l1 0 (vlax-3d-point P3));格式1 
+ (vlax-put-property v_l1 'Coordinate 0 (vlax-3d-point P3));格式2
+;;;==================================================*
   (vlr-added-p vrl);判断反应器是否活动
 ;;;==================================================* 
 ;;;vla-sendcommand(精简版)

@@ -95,7 +95,8 @@ vla-PutRemoteFile
 
 ;定义c-2l函数
 (defun c-2l (notifier-object reactor-object parameter-list / ec ec_l el1 el2 ell_1 
-             ell_2 p0 p1 p2 p3 p4 p0x p0y p0z) 
+             ell_2 p0 p1 p2 p3 p4 p0x p0y p0z
+            ) 
   (setq ec   (vlax-vla-object->ename notifier-object) ;VLA对象的圆转换为图元名
         ec_l (entget ec) ;圆的图元表
         p0   (cdr (assoc 10 ec_l)) ;获取圆心的坐标
@@ -149,7 +150,8 @@ vla-PutRemoteFile
 )
 ;定义c-2l函数
 (defun c-2l (notifier-object reactor-object parameter-list / p0 p1 p2 p3 p4 p0x p0y 
-             p0z l v_l1 v_l2) 
+             p0z l v_l1 v_l2
+            ) 
   (setq p0 (VLA-get-center notifier-object)) ;获取圆的圆心，P0是变体
   (setq p0 (vlax-variant-value p0)) ;将变体转换为安全数组
   (setq p0 (vlax-safearray->list p0)) ;将安全数组转换为表
@@ -174,12 +176,16 @@ vla-PutRemoteFile
 ;;;因此具有程序代码简短、运行速度快的特点。
 
 ;;;==================================================*
+;;; 定义DWG反应器,保存图形会有信息显示
+(vlr-dwg-reactor nil '((:VLR-saveComplete . saveDrawingInfo)))
 ;;;定义名字为saveDrawingInfo的回调函数。
-(defun saveDrawingInfo(calling-reactor commandInfo / dwgname filesize)
+(defun saveDrawingInfo (calling-reactor commandInfo / dwgname filesize) 
   (vl-load-com)
-   (setq dwgname (cadr commandInfo) filesize (vl-file-size dwgname))
-   (alert(strcat "这个文件（" dwgname "）的大小是" (itoa filesize) "字节."))
-   (princ)
+  (setq dwgname  (cadr commandInfo)
+        filesize (vl-file-size dwgname)
+  )
+  (alert (strcat "这个文件（" dwgname "）的大小是" (itoa filesize) "字节."))
+  (princ)
 )
 
 
