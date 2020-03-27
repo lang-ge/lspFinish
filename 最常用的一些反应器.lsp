@@ -1,5 +1,5 @@
 ;;; 最常用的一些反应器
-((:VLR-AcDb-Reactor 
+(:VLR-AcDb-Reactor 
    (:VLR-objectAppended :VLR-objectUnAppended 
                         :VLR-objectReAppended
                         :VLR-objectOpenedForModify
@@ -141,7 +141,7 @@
                       :VLR-xrefSubcommandUnloadItem
     )
   )
-)
+
 
 :VLR-Linker-Reactor
  :VLR-rxAppLoaded
