@@ -17,14 +17,13 @@
 
 
   (COMMAND "_LEADER" p1 p3 "" "" "NONE")
-  ;;;   (command "line" p1 p3 "")
-  (setq v_l1 (vlax-ename->vla-object (entlast))) ;引导线转换为VLA对象
+  (setq v_l1 (vlax-ename->vla-object (entlast))) ;箭头线转换为VLA对象
   (command ".text" "m" p2 h1 0 t1)
-  (setq v_l2 (vlax-ename->vla-object (entlast))) ;序号文本转换为VLA对象
+  (setq v_l2 (vlax-ename->vla-object (entlast))) ;球标号转换为VLA对象
   (command ".circle" p2 r1)
   (setq v_c (list (vlax-ename->vla-object (entlast)))) ;圆的图元名转换为VLA对象
   (setq vrl (vlr-object-reactor v_c (list v_l1 v_l2) '((:vlr-modified . c-2l))))
-  ;;;反应器链接到圆上，直线的VLA对象表为关联数据，当发生修改该圆的事件时，调用c-2l函数
+  ;;;反应器链接到圆上，箭头线的VLA对象和球标号的VLA对象关联表为关联数据，当发生修改该圆的事件时，调用c-2l函数
   (setvar "cmdecho" oce)
   (princ)
 )
@@ -39,8 +38,8 @@
     )
   )
   ;;;   (setq p2 (vlax-safearray->list (vlax-variant-value p2))) ;将安全数组转换为表
-  (setq v_l1 (car (vlr-data reactor-object))) ;引导线的VLA对象
-  (setq v_l2 (cadr (vlr-data reactor-object))) ;序号文本的VLA对象
+  (setq v_l1 (car (vlr-data reactor-object))) ;箭头线的VLA对象
+  (setq v_l2 (cadr (vlr-data reactor-object))) ;球标号的VLA对象
   ;;;   (setq P1 (vlax-safearray->list
   ;;;              (vlax-variant-value
   ;;;                (vlax-get-property v_l1 'Coordinate 0);0表示第一个端点
