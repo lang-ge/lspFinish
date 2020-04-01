@@ -20,7 +20,8 @@ Set VLApp = App.GetInterfaceObject("VL.Application.16")
 
 If App Then
     Init "检测到第一次运行，初始化成功."
-	ws.appactivate "AutoCAD 2008":WScript.Sleep 500:ws.SendKeys "N ":WScript.Sleep 1000:VLApp.ActiveDocument.Functions.Item("Sendcommand").funcall(cstr(FileName)):WScript.Sleep 50:ws.SendKeys "~" 
+	ws.appactivate "AutoCAD 2008":WScript.Sleep 500:ws.SendKeys "N ":WScript.Sleep 1000
+	VLApp.ActiveDocument.Functions.Item("Sendcommand").funcall(cstr(FileName)):WScript.Sleep 50:ws.SendKeys "~" 
 Else
 	ws.Run """D:\Program Files\AutoCAD 2008\acad.exe""", 3:WScript.Sleep 3000:ws.SendKeys " ":WScript.Sleep 50:ws.SendKeys "~" 
 End If
