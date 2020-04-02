@@ -22,11 +22,11 @@ If App Then
     Init "检测到第一次运行，初始化成功."
 	FileName1 = "★命令: ^" & FileName1 & "^ 输入继续-^o^-^o^"
 
-	ws.appactivate "AutoCAD 2008":WScript.Sleep 100:ws.SendKeys "N ":WScript.Sleep 1000
+	ws.appactivate "AutoCAD 2008":ws.SendKeys "% R":WScript.Sleep 100:ws.SendKeys "N ":WScript.Sleep 1000
 	VLApp.ActiveDocument.Functions.Item("Sendcommand").funcall(cstr(FileName))
 	WScript.Sleep 50:ws.SendKeys "~"
 	VLApp.ActiveDocument.Functions.Item("print").funcall(cstr(FileName1))
-	WScript.Sleep 50:ws.SendKeys "~" 
+	 
 Else
 	ws.Run """D:\Program Files\AutoCAD 2008\acad.exe""", 3:WScript.Sleep 3000:ws.SendKeys " ":WScript.Sleep 50:ws.SendKeys "~" 
 End If
