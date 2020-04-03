@@ -55,7 +55,7 @@ Sub merge(Fpath)
     Dim openFile, objTextFile 
 	Set openFile=fs.OpenTextFile(Fpath,1,True)
 	' VPath = fs.GetParentFolderName(WScript.ScriptFullName)
-	fileName = fs.BuildPath(foldername, "finish." + Suffix) 
+	fileName = fs.BuildPath(foldername, "Finish." + Suffix) 
 	Set objTextFile = fs.OpenTextFile(fileName, 8,True)
 	count = count + 1
 	objTextFile.WriteLine (";;;==================================================*" & vbLf & ";;;Àý" & count & ": [¹¦ÄÜ] ")
