@@ -1,6 +1,10 @@
 ::'@cscript //nologo //e:vbscript "%~f0" %* & @goto :eof
 ::On Error Resume Next
 
+' This code is based on similar code improvements on the web.
+' It can be distributed free of charge according to the spirit of open source,
+' but it needs to be signed lang-ge/112807662@qq.com.
+
 'Option Explicit
 If WScript.Arguments.Count = 0 Then
 	Die "No files found."
@@ -20,13 +24,12 @@ Set VLApp = App.GetInterfaceObject("VL.Application.16")
 
 If App Then
     Init "检测到第一次运行，初始化成功."
-	FileName1 = "★命令: ^" & FileName1 & "^ 输入继续-^o^-^o^"
+    'FileName1 = "★命令: ^" & FileName1 & "^ 输入继续-^o^-^o^"
 
 	ws.appactivate "AutoCAD 2008":ws.SendKeys "% R":WScript.Sleep 100:ws.SendKeys "N ":WScript.Sleep 1000
 	VLApp.ActiveDocument.Functions.Item("Sendcommand").funcall(cstr(FileName))
 	WScript.Sleep 50:ws.SendKeys "~"
-	VLApp.ActiveDocument.Functions.Item("print").funcall(cstr(FileName1))
-	 
+	VLApp.ActiveDocument.Functions.Item("grtext").funcall -2, "★命令: ^" & FileName1 & "^ 输入继续-^o^-^o^"
 Else
 	ws.Run """D:\Program Files\AutoCAD 2008\acad.exe""", 3:WScript.Sleep 3000:ws.SendKeys " ":WScript.Sleep 50:ws.SendKeys "~" 
 End If
