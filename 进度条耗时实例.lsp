@@ -36,7 +36,7 @@
 )
 
 (defun cs_pross (to I / CS_TEXT MYI) 
-  (setq cs_text ">>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+  (setq cs_text "¨€¨€¨€¨€¨€¨€¨€¨€¨€¨€¨€¨€¨€¨€")
   (setq myi     (fix (/ (* (strlen cs_text) I) to))
         cs_text (substr cs_text 1 myi)
   )

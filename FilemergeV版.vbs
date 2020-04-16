@@ -26,7 +26,8 @@ Function digui(path)
 	For Each i In Files
 	    Suffix = (fs.GetExtensionName(i))
 		'FileName=FileName & i.path & vbNewLine '找到则追加到变量FileName中
-		merge(i.path)
+		' merge(i.path)
+		Rname(i)
 	Next
 	For Each j In subfolders
 		digui (j.path) '递归查找子目录
@@ -62,4 +63,11 @@ Sub merge(Fpath)
 	objTextFile.WriteLine (openFile.ReadAll)
 	objTextFile.Close
 	Set openFile = Nothing : Set objTextFile = Nothing
+End Sub
+
+'替换引擎!
+Sub Rname(i)
+	i.name = Replace(i.name, "simpread-", "")
+	fileName = i.path 
+	count = count + 1
 End Sub
