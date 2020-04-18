@@ -1,4 +1,4 @@
-(defun c:267 (/ r1 h1 sca loop1 oce p1 loop1 loop2 vla-blkref att_lst sp source t1 
+(defun c:267 (/ r1 h1 sca loop1 oce p1 loop1 loop2 vla-blkref att_lst p2 source t1 
               v_le Points obj-lst kw ArroType
              ) 
   (vl-load-com)
@@ -66,25 +66,25 @@
         (prompt "\n确定序号放置位置:")
 
         (while loop2 
-          (setq sp     (grread T)
-                source (car sp)
-                sp     (cadr sp)
+          (setq p2     (grread T)
+                source (car p2)
+                p2     (cadr p2)
           ) ;_ end setq
           (cond 
             ((= source 5)
-             (vla-put-InsertionPoint vla-blkref (vlax-3d-point sp))
+             (vla-put-InsertionPoint vla-blkref (vlax-3d-point p2))
              (setq Points (vlax-safearray-fill 
                             (vlax-make-safearray 
                               vlax-vbdouble
                               '(0 . 5)
                             )
                             (append p1 
-                                    (polar sp (angle sp p1) (* r1 sca))
+                                    (polar p2 (angle p2 p1) (* r1 sca))
                             )
                           )
              )
 
-             (if (> (distance sp p1) (* r1 sca)) 
+             (if (> (distance p2 p1) (* r1 sca)) 
                (vla-put-coordinates v_le Points)
              )
             )
