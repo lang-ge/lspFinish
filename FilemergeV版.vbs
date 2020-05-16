@@ -1,10 +1,10 @@
 Option Explicit
 ' 主体程序
-Dim count, Switch, foldername, ws, fs, Suffix, fileName, strZ
+Dim count, Switch, foldername, ws, fs, Suffix, fileName, Swstr
 count = 0
 Switch = MsgBox ("^.^是:文件合并，否:名称替换，取消:文件名统计^.^",vbYesNoCancel,"★文件处理工具★")
 If Switch = 7 Then
-	strZ = InputBox("请输入需要替掉的字符")
+	Swstr = InputBox("请输入需要替掉的字符")
 End If
 foldername = InputBox("请输入目标文件夹", "VBS文件工具1.35")
 'foldername = SelectFolder(null)
@@ -83,7 +83,7 @@ End Sub
 
 '替换引擎!
 Sub Rname(i)
-	i.name = Replace(i.name, strZ, "")
+	i.name = Replace(i.name, Swstr, "")
 	fileName = i.path 
 	count = count + 1
 End Sub
