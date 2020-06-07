@@ -296,7 +296,7 @@
 )
 
 ;;; 重文档名处理!
-(DEFUN *Dwn* (dwg sufix fold / x path) 
+(DEFUN *Dwn* (dwg sufix fold / x) 
   (if (not N_list) (setq N_list '()))
   (foreach x N_list 
     (if (wcmatch x (strcat dwg "*")) 
@@ -313,29 +313,45 @@
 )
 
 ;;; 打印PDF文档!
-(DEFUN *Pdf* (/ GRP zd shujlb x path dwna) 
+(DEFUN *Pdf* (/ GRP zd shujlb x dwna) 
   (setvar "filedia" 0)
   (setq GRP (ssget "w" p1 p2))
-  (setq zd (SSGET "P" '((2 . "*a[345]*"))))
-  (setq shujlb (MJ:GetAttributes (cdar (entget (ssname zd 0)))))
-  (setq dwg (strcat (nth 1 (nth 3 shujlb)) (nth 1 (nth 2 shujlb))))
+  (if (setq zd (SSGET "P" '((2 . "*a[345]*")))) 
+    (progn 
+      (setq shujlb (MJ:GetAttributes (cdar (entget (ssname zd 0)))))
+      (setq dwg (strcat (nth 1 (nth 3 shujlb)) (nth 1 (nth 2 shujlb))))
+    )
+    (setq dwg (getstring "请输入文件名称:"))
+  )
   (setq dwna (*Dwn* dwg "" "pdf"))
-  ;;; (alert dwg)
+  ;;; (alert dwg) ;;测试用
   (command "-EXPORT" "P" "w" p1 p2 "y" "" "" "l" "f" "y" "monochrome.ctb" "y" dwna)
   ;;; (command "-EXPORT" "P" "w" p1 p2 "y" "a3" "m" "l" "f" "y" "acad.ctb" "y" dwg)
 )
 
 ;;; 切分DWG文档!
-(DEFUN *Dwg* (GRP / zd shujlb path dwg dwna) 
+(DEFUN *Dwg* (GRP / zd shujlb dwg dwna) 
   (command "_copy" GRP "" "0,0,0" "0,0,0")
   (setq GRP (SSGET "P"))
   (if (not (setq zd (SSGET "P" '((2 . "*a[345]*"))))) 
-    (setq zd (ssadd (car (entsel "文件名缺失!请选择父图框!"))))
+    (if (setq ent (car (entsel "文件名缺失!请选择父图框!"))) 
+      (setq zd (ssadd ent))
+    )
   )
-  (setq shujlb (MJ:GetAttributes (cdar (entget (ssname zd 0)))))
-  (setq dwg (strcat (nth 1 (nth 3 shujlb)) (nth 1 (nth 2 shujlb))))
-  ;;; (setq path (strcat (GETVAR "DWGPREFIX") "dwg\\")); 文件FILEPATH
-  ;;; (vl-mkdir path)
+  (if zd 
+    (progn 
+      (setq shujlb (MJ:GetAttributes (cdar (entget (ssname zd 0)))))
+      (setq DWG (strcat (nth 1 (nth 3 shujlb)) (nth 1 (nth 2 shujlb))))
+    )
+    (setq dwg (getstring "请输入文件名称:"))
+  )
+
+
+  ;;; (if (not (setq zd (SSGET "P" '((2 . "*a[345]*")))))
+  ;;;   (setq zd (ssadd (car (entsel "文件名缺失!请选择父图框!"))))
+  ;;; )
+  ;;; (setq shujlb (MJ:GetAttributes (cdar (entget (ssname zd 0)))))
+  ;;; (setq dwg (strcat (nth 1 (nth 3 shujlb)) (nth 1 (nth 2 shujlb))))
   (setq dwna (*Dwn* dwg ".dwg" "dwg"))
   (SETVAR "FILEDIA" 0)
   (command "_EXPORT" dwna "" "0,0,0" GRP "")
@@ -360,6 +376,7 @@
  (set_tile "PlotRa" "1")
  (action_tile "a1" "(Play (findfile \"menu back.wav\"))(setq fname (N003A $key colorall 1))(Dcl_M)(done_dialog dcl_id)")
  (action_tile "accept" "(Dcl_M)(if(= sel nil)(progn(done_dialog dcl_id)(setq sel 1))(done_dialog dcl_id))")
+ (action_tile "help" "(help \"lsp2008\" \"cad2021\")") ;ALR.default.001,实用Common_Lisp函数.,functions,vlz,cad2021
  (action_tile "cancel" "(setq sel nil)")
  (if (/= sel nil)
   (done_dialog dcl_id)
@@ -418,7 +435,7 @@
  (end_image)
 )
 ;;;批打程式
-(defun one (s / wx n m lname obj p1 p2 px1 py1 px2 py2 mx my a b)
+(defun one (s / wx n m lname obj p1 p2 px1 py1 px2 py2 mx my a b path)
  ;;;-------------------------------------------------------- 
  (if (not
        (findfile "读我qa.ini")
@@ -461,62 +478,69 @@
   (setq m (+ m 1))
  )
   (princ (strcat "\nOK!此次共完成:" (itoa n) " 份图纸"))
+  (if path (startapp "explorer" (strcat "/open," path)))
  )
 ;;;单打程式
-(defun two (/ s sort m shulist p p1 p2 px1 py1 px2 py2 mx my a b)
- (prompt "\n请选择图形!")
- (if (and
+(defun two (/ s sort m shulist p p1 p2 px1 py1 px2 py2 mx my a b path) 
+  (prompt "\n请选择图形!")
+  (if 
+    (and 
       (setq s (SSGET '((0 . "line,arc,lwpolyline,circle,3dsolid,DIMENSION"))))
       (= (cdr (assoc 0 (setq sort (entget (ssname s 0))))) "LINE")
       (= (sslength s) 1)
-     )
-  (progn
-   (setq p (cdr (assoc 10 sort)))
-   (setq p1 (polar p (angtof "45") 1))
-   (setq p2 (polar p (angtof "225") 1))
-   (command "_.select" "box" p1 p2 "")
-   (setq s (SSGET "P"))
-  ))
- 
- (setq m 0)
- (while s
- (setq shulist (minmm_ssbox s))
- (setq p1 (car shulist ));;;左下角
- (setq p2 (cadr shulist ));;;右上角
-;;;mx┏━a━━━┓p2
-;;;  ┃         ┃
-;;;   b          b
-;;;  ┃         ┃
-;;;  ┃         ┃
-;;;p1┗━a━━━┛my
-  (setq px1 (car p1))		       ; 取得p1坐标的x值
-  (setq py1 (cadr p1))		       ; 取得p1坐标的y值
-  (setq px2 (car p2))		       ; 取得p2坐标的x值
-  (setq py2 (cadr p2))		       ; 取得p2坐标的y值
-  
-  (setq mx (list px1 py2))	       ; 求得mx坐标值
-  (setq my (list px2 py1))	       ; 求得my坐标值
-  (setq a  (distance mx p2));;;mx点 ,p2值点之间的距离：横向的距离
-  (setq b  (distance p1 mx));;;p1点 ,mx点之间的距离：纵向的距离值
-  
-(Preng)
-   (princ (strcat "\n正在进行: 第" (itoa (+ m 1)) "页"))
-   (setq m (1+ m))
-   (prompt "\n★请选择下一个图形！")
-   (if (and
-	(setq s (SSGET '((0 . "line,arc,lwpolyline,circle,3dsolid,DIMENSION"))))
+    )
+    (progn 
+      (setq p (cdr (assoc 10 sort)))
+      (setq p1 (polar p (angtof "45") 1))
+      (setq p2 (polar p (angtof "225") 1))
+      (command "_.select" "box" p1 p2 "")
+      (setq s (SSGET "P"))
+    )
+  )
+
+  (setq m 0)
+  (while s 
+    (setq shulist (minmm_ssbox s))
+    (setq p1 (car shulist)) ;;;左下角
+    (setq p2 (cadr shulist)) ;;;右上角
+    ;;;mx┏━a━━━┓p2
+    ;;;  ┃         ┃
+    ;;;   b          b
+    ;;;  ┃         ┃
+    ;;;  ┃         ┃
+    ;;;p1┗━a━━━┛my
+    (setq px1 (car p1)) ; 取得p1坐标的x值
+    (setq py1 (cadr p1)) ; 取得p1坐标的y值
+    (setq px2 (car p2)) ; 取得p2坐标的x值
+    (setq py2 (cadr p2)) ; 取得p2坐标的y值
+
+    (setq mx (list px1 py2)) ; 求得mx坐标值
+    (setq my (list px2 py1)) ; 求得my坐标值
+    (setq a (distance mx p2)) ;;;mx点 ,p2值点之间的距离：横向的距离
+    (setq b (distance p1 mx)) ;;;p1点 ,mx点之间的距离：纵向的距离值
+
+    (Preng)
+    (princ (strcat "\n正在进行: 第" (itoa (+ m 1)) "页"))
+    (setq m (1+ m))
+    (prompt "\n★请选择下一个图形！")
+    (if 
+      (and 
+        (setq s (SSGET '((0 . "line,arc,lwpolyline,circle,3dsolid,DIMENSION"))))
         (= (cdr (assoc 0 (setq sort (entget (ssname s 0))))) "LINE")
         (= (sslength s) 1)
-       )
-    (progn
-     (setq p (cdr (assoc 10 sort)))
-     (setq p1 (polar p (angtof "45") 1))
-     (setq p2 (polar p (angtof "225") 1))
-     (command "_.select" "box" p1 p2 "")
-     (setq s (SSGET "P"))
-    )))
-   (princ (strcat "\nOK!此次共完成:" (itoa m) " 份图纸"))
- )
+      )
+      (progn 
+        (setq p (cdr (assoc 10 sort)))
+        (setq p1 (polar p (angtof "45") 1))
+        (setq p2 (polar p (angtof "225") 1))
+        (command "_.select" "box" p1 p2 "")
+        (setq s (SSGET "P"))
+      )
+    )
+  )
+  (princ (strcat "\nOK!此次共完成:" (itoa m) " 份图纸"))
+  (if path (startapp "explorer" (strcat "/open," path)))
+)
 
 ;|
 命令: -plot
