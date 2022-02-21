@@ -1,5 +1,33 @@
 ;;; Function library
-
+;;0  常数(lisp编辑器在输出局部变量时,带*的会排在前面.Caoyin这样写很有道理)
+;;(setq *En2Obj* vlax-ename->vla-object
+;;      *Obj2En* vlax-vla-object->ename
+;;      *2PI*    (* PI 2)
+;;      *0.5PI*  (/ PI 2)
+;;      *0.25PI* (/ PI 4)
+;;      ;;常用VLA对象、集合
+;;      *ACAD*   (vlax-get-acad-object)
+;;      *DOC*    (vla-get-ActiveDocument *ACAD*)
+;;      *DOCS*   (vla-get-Documents *ACAD*)
+;;      *MS*     (vla-get-modelSpace *DOC*)
+;;      *PS*     (vla-get-paperSpace *DOC*)
+;;      *BLKS*   (vla-get-Blocks *DOC*)
+;;      *LAYS*   (vla-get-Layers *DOC*)
+;;      *LTS*    (vla-get-Linetypes *DOC*)
+;;      *STS*    (vla-get-TextStyles *DOC*)
+;;      *GRPS*   (vla-get-groups *DOC*)
+;;      *DIMS*   (vla-get-DimStyles *DOC*)
+;;      *LOUTS*  (vla-get-Layouts *DOC*)
+;;      *VPS*    (vla-get-Viewports *DOC*)
+;;      *VS*     (vla-get-Views *DOC*)
+;;      *DICS*   (vla-get-Dictionaries *DOC*)
+;;      ;;常用的几个外部接口对象
+;;      *FSO*    (vlax-get-or-create-object "Scripting.FileSystemObject")
+;;      *WSH*    (vlax-get-or-create-object "wscript.shell")
+;;      *SHELL*  (vlax-get-or-create-object "Shell.Application")
+;;      *SCR*    (vlax-get-or-create-object "ScriptControl")
+;;      *WBEM*   (vlax-get-or-create-object "WbemScripting.SWbemLocator")
+;;)
 ;;;VsCode辅助函数A
 ;;; ***************************************************************************
 ;; ▓ (Sendcommand)
