@@ -14,7 +14,11 @@
   (setvar "CLAYER" "mark")
 
   ;;; 箭头选项
+<<<<<<< HEAD
   (if (not #def) (setq #def "D默认"))
+=======
+;   (if (not #def) (setq #def "D默认"))
+>>>>>>> ec99df1 (done)
   (initget "D默认 S小点 O'90° B方块")
   (setq kw (getkword 
              (acet-str-format "Enter an option [D默认/S小点/O'90°/B方块] <%1>: " #def)

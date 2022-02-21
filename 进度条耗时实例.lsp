@@ -13,14 +13,22 @@
       )
       ;;;逐个对象进行量取
       (repeat (setq nm (sslength SS)) 
+<<<<<<< HEAD
         (cs_pross nm I)
+=======
+        (Scr_pross I)
+>>>>>>> ec99df1 (done)
         (setq OBJ (vlax-ename->vla-object (ssname SS I)))
         (setq p2 (vlax-safearray->list 
                    (vlax-variant-value (VLA-get-center OBJ))
                  )
         )
         (SETQ SC (RTOS (car p2) 2 0))
+<<<<<<< HEAD
         (alert SC)
+=======
+        (command "_.delay" 500) ;延时功能
+>>>>>>> ec99df1 (done)
         (setq I (1+ I))
       )
       (setq etime (getvar "date"))
@@ -35,6 +43,7 @@
   (princ)
 )
 
+<<<<<<< HEAD
 (defun cs_pross (to I / CS_TEXT MYI) 
   (setq cs_text "██████████████")
   (setq myi     (fix (/ (* (strlen cs_text) I) to))
@@ -42,4 +51,7 @@
   )
   (grtext -2 cs_text)
 )
+=======
+
+>>>>>>> ec99df1 (done)
 
