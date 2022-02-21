@@ -1,4 +1,4 @@
-(defun c:253 (/ p1 p2 entity pt1 pt2 mx1 my1) 
+(defun c:eer (/ p1 p2 entity pt1 pt2 mx1 my1) 
   (vl-load-com)
   (vl-cmdf "_ucs" "world")
   (prompt "\n±ê×¢ÍâÐÎ³ß´ç")

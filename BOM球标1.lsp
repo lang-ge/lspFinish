@@ -1,4 +1,4 @@
-(defun c:267 (/ r1 h1 sca loop1 oce p1 loop1 loop2 vla-blkref att_lst p2 source t1 
+(defun c:nm (/ r1 h1 sca loop1 oce p1 loop1 loop2 vla-blkref att_lst p2 source t1 
               v_le Points obj-lst kw ArroType
              ) 
   (vl-load-com)
@@ -14,35 +14,32 @@
   (setvar "CLAYER" "mark")
 
   ;;; 箭头选项
-<<<<<<< HEAD
-  (if (not #def) (setq #def "D默认"))
-=======
-;   (if (not #def) (setq #def "D默认"))
->>>>>>> ec99df1 (done)
-  (initget "D默认 S小点 O'90° B方块")
+  (if (not #dea) (setq #dea "D"))
+  (initget "D S O B")
   (setq kw (getkword 
-             (acet-str-format "Enter an option [D默认/S小点/O'90°/B方块] <%1>: " #def)
+             (acet-str-format "Enter an option [默认(D)/小点(S)/90° (O)/方块(B)] <%1>: " #dea)
            )
   )
   (if (or (not kw) (equal kw "")) 
-    (setq kw #def)
-    (setq #def kw)
+    (setq kw #dea)
+    (setq #dea kw)
   )
   (cond 
-    ((= kw "D默认")
+    ((= kw "D")
      (setq ArroType acArrowDefault)
     )
-    ((= kw "S小点")
+    ((= kw "S")
      (setq ArroType acArrowDotSmall)
     )
-    ((= kw "O'90°")
+    ((= kw "O")
      (setq ArroType acArrowOpen90)
     )
-    ((= kw "B方块")
+    ((= kw "B")
      (setq ArroType acArrowBoxBlank)
     )
   )
   ;;; 结束
+  
   (if (not (check_num_block)) 
     (Creat_Num_block h1 r1)
   )
