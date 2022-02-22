@@ -156,7 +156,7 @@
 
 ;;; ***********************************************
 ;;; 打印机切换dos_clipboard
-(defun C:V6 (/ olddynmode prna str key)
+(defun C:V6 (/ olddynmode prna *WBEM* SVR str key)
   (vl-load-com)
   (setvar "cmdecho" 0)
   (setq olddynmode (getvar "dynmode"))
@@ -164,11 +164,15 @@
     (setvar "dynmode" 1)
   )
   (setq prna (defultprint))
-  (startapp "wscript.exe" (strcat "\"" (findfile "pts.vbs") "\""))
-;;  (SendKeys "")
-  (vl-cmdf "delay" 200) 
-  (setq str (GET-CLIP-STRING))
-  (if (= str "1")
+  (setq *WBEM* (vlax-create-object "WbemScripting.SWbemLocator"))
+  (setq SVR (vlax-invoke *WBEM* 'ConnectServer))
+  (vlax-for obj (vlax-invoke SVR 'InstancesOF "Win32_Printer") 
+    ;;(vlax-dump-object obj T)
+    (if (= (vlax-get obj 'Default) -1) 
+      (setq str (vlax-get obj 'Status))
+    )
+  )
+  (if (= str "OK")
     (progn
       (initget "1 2 3")
       (setq key (getkword (acet-str-format "\n检测到打印机为暂停状态![恢复打印(1)/放弃^-^(2)/查看队列(3)]/<恢复打印>:")))
@@ -201,6 +205,8 @@
     )
   )
   (setvar "dynmode" olddynmode)
+  (vlax-release-object SVR)
+  (vlax-release-object *WBEM*)
   (princ)
 )
 ;;;生成透明命令
