@@ -204,9 +204,9 @@
       )
     )
   )
-  (setvar "dynmode" olddynmode)
   (vlax-release-object SVR)
   (vlax-release-object *WBEM*)
+  (setvar "dynmode" olddynmode)
   (princ)
 )
 ;;;Éú³ÉÍ¸Ã÷ÃüÁî

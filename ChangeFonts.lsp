@@ -1,9 +1,7 @@
-(vl-load-com)
-(setq *acad* (vlax-get-acad-object))
-(setq *doc* (vla-get-ActiveDocument *acad*))
+
 ;字体更换程序
 ;================================================================
-(defun c:kk (/ $fontlist$ $sydzt$ addlist av:changefontsdcl dclid desetpopx-0 desetpopx-1 fname getpop key setcusfontstype setpop1-0 setpop1-1 setpop2-0 setpop2-1)
+(defun c:kk (/ $fontlist$ $sydzt$ *acad* *doc* addlist av:changefontsdcl dclid desetpopx-0 desetpopx-1 deshow fname getpop key setcusfontstype setpop1-0 setpop1-1 setpop2-0 setpop2-1)
   (defun av:changefontsdcl (fname / dcls fn)
     (setq dcls
 			(list
@@ -78,12 +76,12 @@
 				"                        fixed_width = true ;"
 				"                        key = \"pop1-t\" ;"
 				"                        label = \"字体1:\" ;"
-				"                        width = 12 ;"
+				"                        width = 8 ;"
 				"                    }"
 				"                    :popup_list {"
 				"                        fixed_width = true ;"
 				"                        key = \"pop1\" ;"
-				"                        width = 17 ;"
+				"                        width = 21 ;"
 				"                    }"
 				"                }"
 				"                :row {"
@@ -91,12 +89,12 @@
 				"                        fixed_width = true ;"
 				"                        key = \"pop2-t\" ;"
 				"                        label = \"字体2:\" ;"
-				"                        width = 12 ;"
+				"                        width = 8 ;"
 				"                    }"
 				"                    :popup_list {"
 				"                        fixed_width = true ;"
 				"                        key = \"pop2\" ;"
-				"                        width = 17 ;"
+				"                        width = 21 ;"
 				"                    }"
 				"                }"
 				"            }"
@@ -209,28 +207,36 @@
 	;	(end_list)
 	;)
 	;设置按钮类型
-	(defun setpop1-1(/ unis)
-		(setq unis ($fontlist$ "*unifont*"));常规字形
+	(defun setpop1-1(/ npop1 shx shx1 shx2)
+		(setq shx1 ($fontlist$ "*unifont*"));常规字形
+		(setq shx2 ($fontlist$ "*shapes*"));形字形
+		(setq shx (acad_strlsort(append shx1 shx2)))
 		(mode_tile "pop1" 0)
-		(AddList "pop1" unis)
-		(set_tile "pop1-t" "SHX字体(X):")
-		unis
+		(AddList "pop1" shx)
+		(setq npop1 (vl-position "txt.shx" shx))
+		(and npop1 (set_tile "pop1" (itoa npop1)))
+		(set_tile "pop1-t" "SHX字体:")
+		shx
 	)
-	(defun setpop2-1(/ bigs)
+	(defun setpop2-1(/ bigs npop2)
 		(setq bigs ($fontlist$ "*bigfont*"));大字形
 		(mode_tile "pop2" 0)
 		(AddList "pop2" bigs)
-		(set_tile "pop2-t" "大字体(B):")
+		(setq npop2 (vl-position "tssdchn.shx" bigs))
+		(and npop2 (set_tile "pop2" (itoa npop2)))
+		(set_tile "pop2-t" "大字体:")
 		bigs
 	)
-	(defun setpop1-0(/ ttfs)
-		(set_tile "pop1-t" "字体名(F):")
+	(defun setpop1-0(/ npop1 ttfs)
+		(set_tile "pop1-t" "字体名:")
 		(setq ttfs (list "微软雅黑" "仿宋" "黑体" "楷体" "宋体" "新宋体"))
 		(AddList "pop1" ttfs)
+		(setq npop1 (vl-position "微软雅黑" ttfs))
+		(and npop1 (set_tile "pop1" (itoa npop1)))
 		ttfs
 	)
 	(defun setpop2-0()
-		(set_tile "pop2-t" "字体样式(Y):")
+		(set_tile "pop2-t" "样式名:")
 		(mode_tile "pop2" 1)
 		(AddList "pop2" nil)
 	)
@@ -240,6 +246,11 @@
     (setq pick (get_tile "sydzt"))
     (if(= pick "1")(desetpopx-1)(desetpopx-0))
   )
+	;设置默认显示情况
+	(defun deshow()
+		(progn(set_tile "sydzt" "0")(desetpopx-0)) ;粗字体
+		;(progn(set_tile "sydzt" "1")(desetpopx-1)) ;细字体
+	)
 	;取得列表字体
 	(defun getpop(pop fontlist / font pick)
 		(setq pick (atoi(get_tile pop)))
@@ -253,16 +264,17 @@
 		(setq pop2-1 (getpop "pop2" bigs))
 		(setq sydzt (get_tile "sydzt"))
 		(cond
-			((= sydzt "0")(av:fontstoshx nil nil pop1-0))
-			((= sydzt "1")(av:fontstoshx pop1-1 pop2-1 nil))
+			((= sydzt "0")(av:fontstottf pop1-0))
+			((= sydzt "1")(av:fontstoshx pop1-1 pop2-1))
 			(t nil)
 		)
 	)
 	;开始奔跑
 	(vl-load-com)
   (setvar "cmdecho" 0)
-	;(setq *acad* (vlax-get-acad-object))
-	;(setq *doc* (vla-get-ActiveDocument *acad*))
+	(explode-screen-mtext);分解当前屏幕区域多行文本
+	(setq *acad* (vlax-get-acad-object))
+	(setq *doc* (vla-get-ActiveDocument *acad*))
   (and
 		(setq fname (vl-filename-mktemp nil nil ".dcl"))
 		(av:changefontsdcl fname)
@@ -275,122 +287,127 @@
 	(action_tile "13" "(done_dialog 13)")
 	(action_tile "14" "(done_dialog 14)")
 	(action_tile "15" "(done_dialog 15)")
-	(action_tile "16" "(c:regenlocal)(done_dialog 0)")
+	(action_tile "16" "(regenlocal)(done_dialog 0)")
 	(action_tile "sydzt" "($sydzt$)")
 	(action_tile "ok" "(setcusfontstype)(done_dialog 1)")
-	(desetpopx-0);默认不使用大字体时的显示样式
+	(deshow);设置默认显示情况
 	(setq key (start_dialog))
 	(unload_dialog dclid)
 	(cond
-		((= key 11) (av:nulltoFonts "tssdeng" "hztxt" "仿宋"))
-		((= key 12) (av:fontstoshx "tssdeng" "hztxt" t))
-		((= key 13) (av:fontstoshx "tssdeng" "hztxt" nil))
-		((= key 14) (av:fontstoshx "gbenor.shx" "gbcbig.shx" nil))
-		((= key 15) (av:fontstoshx nil nil "仿宋"))
+		((= key 11) (av:0totc "tssdeng" "hztxt" "仿宋"))
+		((= key 12) (av:fontstofh "tssdeng" "hztxt"))
+		((= key 13) (av:fontstoshx "tssdeng" "hztxt"))
+		((= key 14) (av:fontstoshx "gbenor.shx" "gbcbig.shx"))
+		((= key 15) (av:fontstottf "仿宋"))
 		((= key 1) nil)
 		(t (setq key nil))
 	)
-	(if key (repeat 1 (vla-regen *doc* 0)))
+	(if key (repeat *n-regen* (vla-regen *doc* 0)))
   (vl-file-delete fname)
   (setvar "cmdecho" 1)
   (princ)
 )
 
-
+(vl-load-com)
+(setq *acad* (vlax-get-acad-object))
+(setq *doc* (vla-get-ActiveDocument *acad*))
+(setq *n-regen* 1)
 ;================================================================
 
-
-(defun av:fontstoshx (shxx shxb ttf / a1 a2 info toshx tottf)
-	(defun toshx (shxx shxb / a3)
-		(setq a3 (entget (tblobjname "style" a2))) ;取出字体的数据串行
-		(setq a3 (subst (cons 3 shxx) (assoc 3 a3) a3))
-		;将字体字型改成新字型
-		(setq a3 (subst (cons 4 shxb) (assoc 4 a3) a3))
-		;将字体字型改成新字型
-		(entmod a3)			;更新字体
-	)
-	(defun tottf (ttf / font_obj obj)
-		(setq font_obj (vla-get-TextStyles *doc*))
-		(setq obj (vla-add font_obj a2));此处容易出错？？？
-		;(vla-getfont obj 'a 'b 'c 'd 'e) 
-		(vla-setFont obj ttf 0 0 134 2)
-	)
-	(setq a1 (tblnext "style" t))	;将指针移到第一个字体
-	(while a1
-		(setq a2 (cdr (assoc 2 a1)))	;取出字体名称
-		(cond
-			((and (/= shxx nil) (/= shxb nil) (/= ttf nil))
-				(cond
-					((wcmatch a2 "*仿宋*") (tottf "仿宋"))
-					((wcmatch a2 "*宋体*") (tottf "宋体"))
-					((wcmatch a2 "*黑体*") (tottf "黑体"))
-					((wcmatch a2 "*楷体*") (tottf "楷体"))
-					(t (toshx "tssdeng.shx" "hztxt.shx"))
-				)
-			)
-			((and (/= shxx nil) (/= shxb nil) (= ttf nil))
-				(toshx shxx shxb)
-			)
-			((and (= shxx nil) (= shxb nil) (/= ttf nil))
-				(tottf ttf)
-			)
-		)
-		(setq a1 (tblnext "style"))	;找出下一个字体
-	)
-	(cond
-		((and (/= shxx nil) (/= shxb nil) (/= ttf nil))
-			(setq info (strcat "shx字体和True字体"))
-		)
-		((and (/= shxx nil) (/= shxb nil) (= ttf nil))
-			(setq info (strcat shxx "、" shxb))
-		)
-		((and (= shxx nil) (= shxb nil) (/= ttf nil))
-			(setq info ttf)
-		)
-	)
-	(princ (strcat "\n>>>字型替换为" info "。"))
-	(princ)
+(defun av:toshx (x shxx shxb)
+	(vla-put-fontfile x shxx)
+	(vla-put-bigfontfile x shxb)
 )
-(defun av:nulltoFonts	(shxx shxb ttf / err font_obj)
-	;"不存在"的空字体批量处理程序。
-	;(nulltoFonts "tssdeng" "tssdchn" "仿宋")
-	(vl-load-com)
-	(setq font_obj (vla-get-TextStyles *doc*))
-	(vlax-for x	font_obj		;单独分离函数时需重新定义font_obj
+(defun av:tottf (x ttf)
+	(vla-setfont x ttf b c d e)
+)
+(defun c:fontstofh()
+	(setvar "cmdecho" 0)
+	(av:fontstofh "tssdeng" "hztxt")
+	(repeat *n-regen* (vla-regen *doc* 0))
+  (setvar "cmdecho" 1)
+  (princ)
+)
+(defun av:fontstofh(shxx shxb / xn)
+	(vlax-for x (vla-get-textstyles *doc*)
+		(vla-getfont x 'a 'b 'c 'd 'e)
+		(setq xn (vla-get-name x))
+		(cond
+			((wcmatch xn "*仿宋*") (av:tottf x "仿宋"))
+			((wcmatch xn "*宋体*") (av:tottf x "宋体"))
+			((wcmatch xn "*黑体*") (av:tottf x "黑体"))
+			((wcmatch xn "*楷体*") (av:tottf x "楷体"))
+			(t (av:toshx x "tssdeng.shx" "hztxt.shx"))
+		)
+  )
+	(princ (strcat "\n>>>字型替换为shx字体和仿宋字体"))
+)
+(defun c:fontstofz()
+	(setvar "cmdecho" 0)
+	(av:fontstoshx "tssdeng" "hztxt")
+	(repeat *n-regen* (vla-regen *doc* 0))
+  (setvar "cmdecho" 1)
+  (princ)
+)
+(defun c:fontstogb()
+	(setvar "cmdecho" 0)
+	(av:fontstoshx "gbenor.shx" "gbcbig.shx")
+	(repeat *n-regen* (vla-regen *doc* 0))
+  (setvar "cmdecho" 1)
+  (princ)
+)
+(defun av:fontstoshx(shxx shxb)
+	(vlax-for x (vla-get-textstyles *doc*)
+		(av:toshx x shxx shxb)
+		;(princ (entmod(entget(tblobjname "style" (vla-get-name x)))))
+  )
+	(princ (strcat "\n>>>字型替换为" shxx "、" shxb))
+)
+(defun c:fontstofs()
+	(setvar "cmdecho" 0)
+	(av:fontstottf "仿宋")
+	(repeat *n-regen* (vla-regen *doc* 0))
+  (setvar "cmdecho" 1)
+  (princ)
+)
+(defun av:fontstottf(ttf)
+	(vlax-for x (vla-get-textstyles *doc*)
+		(vla-getfont x 'a 'b 'c 'd 'e)
+		(av:tottf x ttf)
+  )
+	(princ (strcat "\n>>>字型替换为" ttf))
+)
+(defun av:0totc	(shxx shxb ttf / big err shx)
+	(vlax-for x	(vla-get-TextStyles *doc*)
 		(vla-getfont x 'a 'b 'c 'd 'e)
 		(if (= a "")
 			(progn
-				(if (and
-							(not (findfile (vla-get-fontfile x)))
-							(not (findfile (strcat (vla-get-fontfile x) ".shx")))
-						)
-					(vla-put-fontfile x shxx);此处容易出错？？？
-				)
-				(if
-					(and
-						(/= (vla-get-bigfontfile x) "")
-						(not (findfile (vla-get-bigfontfile x)))
-						(not (findfile (strcat (vla-get-bigfontfile x) ".shx")))
+				(cond
+					((findfile (setq shx (strcat (vla-get-fontfile x) ".shx")))
+						(vla-put-fontfile x shx)
 					)
-					(vla-put-bigfontfile x shxb)
+					((findfile (setq shx (vla-get-fontfile x)))
+						(vla-put-fontfile x shx)
+					)
+					(t (vla-put-fontfile x shxx))
 				)
-				;(vla-put-Height font_obj 0);设置字高
-				;(vla-put-width font_obj 0.8);设置字宽
+				(cond
+					((findfile (setq big (strcat (vla-get-bigfontfile x) ".shx")))
+						(vla-put-bigfontfile x big)
+					)
+					((findfile (setq big (vla-get-bigfontfile x)))
+						(vla-put-bigfontfile x big)
+					)
+					(t (vla-put-bigfontfile x shxb))
+				)
 			)
 			(progn
-				(setq
-					err	(vl-catch-all-apply 'vla-setfont (list x a b c d e))
-				)
-				(if (vl-catch-all-error-p err)
-					(vla-setfont x ttf b c d e)
-					;(vla-setFont x ttf :vlax-false :vlax-false 134 2)
-				)
+				(setq err	(vl-catch-all-apply 'vla-setfont (list x a b c d e)))
+				(if (vl-catch-all-error-p err) (vla-setfont x ttf b c d e))
 			)
 		)
 	)
-	(princ
-		(strcat "\n>>>空字型分别替换为" shxx "、" shxb "、" ttf)
-	)
+	(princ(strcat "\n>>>空字型分别替换为" shxx "、" shxb "、" ttf))
 )
 
 ;================================================================
@@ -398,37 +415,45 @@
 ;局部刷新重生成
 (defun c:r()
 	(princ "-->局部重生成\n")
-	(c:regenlocal)
+	(regenlocal)
 )
-(defun c:regenlocal (/ $screen atio ce ch ch2 diftime hh hh2 immtime p1 p2 re1 re2 ss)
+(defun regenlocal (/ re1 re2 ss)
+	(defun re1()(vl-cmdf "MOVE" ss "" "0,0,0" "0,0,0"))
+	(defun re2()((lambda (i / e)(while (setq e (ssname ss (setq i (1+ i))))(entupd e)))-1))
 	(setvar "cmdecho" 0)
-	(setq $screen (getvar "SCREENSIZE")) 
-	(setq ch (getvar "viewsize")) 
-	(setq ch2 (/ ch 2)) 
-	(setq ce (getvar "viewctr")) 
-	(setq atio (/ (car $screen) (cadr $screen))) 
-	(setq hh (* atio ch)) (setq hh2 (/ hh 2))
-	(setq p1 (polar (polar ce 0 hh2) (* 1.5 pi) ch2))
-	(setq p2 (polar (polar ce pi hh2) (* 0.5 pi) ch2))
-	(setq ss (ssget "C" p1 p2))
-	(setq immtime (getvar "tdusrtimer"))
-	(if oldimmtime (setq diftime (* (- immtime oldimmtime) 86400)))
-	(defun re1()((lambda (i / e)(while (setq e (ssname ss (setq i (1+ i))))(entupd e)))-1))
-	(defun re2()(vl-cmdf "MOVE" ss "" "0,0,0" "0,0,0"))
-	(if ss (progn(cond
-								 ((null oldimmtime)(setq oldimmtime (getvar "tdusrtimer"))(re1))
-								 ((> diftime 0.2)(setq oldimmtime immtime)(re1))
-								 (t (setq oldimmtime immtime)(re2))
-							 )
-					 ;(princ ">>>局部重生成")
-				 )
+	(if (setq ss (ssscreen))
+		(if(null(re1))(re2))
 		(princ "屏幕区域内无内容！")
 	)
 	(setvar "cmdecho" 1)
 	(princ)
 )
-
-;================================================================
+;选择当前屏幕区域内容
+(defun ssscreen(/ $screen atio ce ch ch2 hh hh2 p1 p2 ss)
+	(setq $screen (getvar "SCREENSIZE")) 
+	(setq ch (getvar "viewsize")) 
+	(setq ch2 (/ ch 2)) 
+	(setq ce (getvar "viewctr")) 
+	(setq atio (/ (car $screen) (cadr $screen))) 
+	(setq hh (* atio ch)) 
+	(setq hh2 (/ hh 2))
+	(setq p1 (polar (polar ce 0 hh2) (* 1.5 pi) ch2))
+	(setq p2 (polar (polar ce pi hh2) (* 0.5 pi) ch2))
+	(setq ss (ssget "C" p1 p2))
+)
+;分解当前屏幕区域多行文本
+(defun explode-screen-mtext (/ ss)
+	(setvar "qaflags" 1)
+	(and
+		(setq ss (ssscreen))
+		(setq ss (ssget "p" '((0 . "mtext"))))
+		;(sssetfirst nil ss)
+		(command "explode" ss "")
+	)
+	(setvar "qaflags" 0)
+)
+;=======================================================
+;字体自动更换程序
 (defun ChangeFonts (/ file path)
 	(setvar "cmdecho" 0)
 	(if(null(and
@@ -438,14 +463,16 @@
 						(vl-cmdf "netload" file)
 						;(if (vl-cmdf "netload" file) t (progn(command-s "netload" file)t))
 					))
-		(av:nulltoFonts "tssdeng" "hztxt" "仿宋")
+		(progn
+			(av:0totc "tssdeng" "hztxt" "仿宋")
+			(repeat *n-regen* (vla-regen *doc* 0))
+		)
 	)
 	(setvar "cmdecho" 1)
 	(vl-acad-undefun 'ChangeFonts)
 	(princ)
 )
 (ChangeFonts)
-
 
 
 (princ)
